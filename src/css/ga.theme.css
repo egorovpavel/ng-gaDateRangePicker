@@ -1,0 +1,123 @@
+.gadpBox {
+    padding : 10px 10px 10px 10px;
+    background-color: #f7f7f7;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-color: rgba(0, 0, 0, 0.14902);
+    border-style: solid;
+    border-width: 1px;
+    min-width: 160px;
+    width : 750px;
+}
+
+.gadpText {
+    font-family: arial, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.gadpDatesInputs {
+    margin-bottom: 5px;
+}
+
+.gadpTable {
+    -webkit-border-horizontal-spacing: 0px;
+    -webkit-border-vertical-spacing: 0px;
+    border-bottom-color: rgb(128, 128, 128);
+    border-collapse: collapse;
+    border-left-color: rgb(128, 128, 128);
+    border-right-color: rgb(128, 128, 128);
+    border-top-color: rgb(128, 128, 128);
+    display: table;
+    font-family: arial, sans-serif;
+    font-size: 13px;
+    height: 110px;
+    visibility: visible;
+    white-space: nowrap;
+    width: 126px;
+}
+.gadpHeadTd {
+    background-color: rgb(221, 221, 221);
+    border-collapse: collapse;
+    display: table-cell;
+    font-family: arial, sans-serif;
+    font-size: 10px;
+    height: 16px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    text-align: center;
+    vertical-align: middle;
+    visibility: visible;
+    white-space: nowrap;
+    width: 126px;
+}
+
+.gadpWeekDay {
+    background-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(204, 204, 204);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-collapse: collapse;
+    border-right-color: rgb(247, 247, 247);
+    border-right-style: solid;
+    border-right-width: 1px;
+    display: table-cell;
+    font-family: arial, sans-serif;
+    font-size: 9px;
+    font-weight: bold;
+    height: 10px;
+    padding-bottom: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 2px;
+    text-align: center;
+    vertical-align: middle;
+    visibility: visible;
+    white-space: nowrap;
+    width: 11px;
+}
+
+.gadpCell {
+    background-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(247, 247, 247);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-collapse: collapse;
+    border-right-color: rgb(247, 247, 247);
+    border-right-style: solid;
+    border-right-width: 1px;
+    display: table-cell;
+    font-family: arial, sans-serif;
+    font-size: 9px;
+    height: 10px;
+    padding-bottom: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 2px;
+    text-align: center;
+    vertical-align: middle;
+    visibility: visible;
+    white-space: nowrap;
+    width: 11px;
+    cursor: pointer;
+}
+
+td.gadpCellselect:hover {
+    background-color: yellow;
+}
+
+.gadpCellinRange {
+    background-color: blue;
+    color:white;
+    cursor: pointer;
+}
+
+.gadpCellnds {
+    color:lightgrey;
+    cursor: default;
+}
