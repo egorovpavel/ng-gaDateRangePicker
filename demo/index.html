@@ -11,7 +11,17 @@
     <title></title>
 </head>
 <body ng-app="demo" ng-controller="test">
-    <div ga_date_range_picker range1="range1" n-month="3"></div>
-    {{range1}}
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8" style="margin-top: 100px">
+            <h2>Simply use with 3 months display</h2>
+            <div ga_date_range_picker range1="myDates" n-change="test" n-month="3"></div>
+            <br>
+            <div><strong>Date Start:</strong> {{myDates.start}}</div>
+            <div><strong>Date End:</strong> {{myDates.end}}</div>
+            <br>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
 </body>
 </html>

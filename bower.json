@@ -1,14 +1,34 @@
 {
-  "name": "ng-gaDatePicker",
+  "name": "ng-gadaterangepicker",
   "version": "0.1.0",
   "ignore": [
     "**/.*",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "node_modules"
   ],
   "dependencies": {
-    "angular" : "1.2.23",
-    "moment": "*"
-  }
+    "angular": "1.2.*",
+    "moment": "2.9.*"
+  },
+  "homepage": "https://github.com/dispobiz/ng-gaDateRangePicker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dispobiz/ng-gaDateRangePicker.git"
+  },
+  "authors": [
+    { "name": "Stéphane Bonnet", "email": "stephane@sbonnet.com" }
+  ],
+  "description": "AngularJS directive for Google Analytics Date Range Picker Style",
+  "main": "src/js/gaDatePickerRange.js",
+  "keywords": [
+    "AngularJs",
+    "Date",
+    "Range",
+    "Picker",
+    "Google",
+    "Analytics"
+  ],
+  "license": "MIT"
 }

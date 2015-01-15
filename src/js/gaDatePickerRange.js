@@ -26,10 +26,15 @@ app.directive( 'gaDateRangePicker', [ function() {
         transclude : true,
         scope : {
             'range1' : '=',
-            'nMonth' : '@'
+            'nMonth' : '@',
+            'nChange': '='
         },
         template:
-            '<button type="button" class="btn btn-default" ng-click="switchDisplay( true )">{{range1.startLabel}} - {{range1.endLabel}}</button>' +
+            '<div class="btn-group" role="group">' +
+            '<button type="button" class="btn btn-default" role="group" ng-click="movePeriod(-1)"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span></button>' +
+            '<button type="button" class="btn btn-default" role="group" ng-click="switchDisplay( true )">{{range1.startLabel}} - {{range1.endLabel}}</button>' +
+            '<button type="button" class="btn btn-default" role="group" ng-click="movePeriod(1)"><span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span></button>' +
+            '</div>' +
             '<div class="gadpBox" ng-show="display">' +
             '<div style="float:left"><button class="btn btn-default btn-xs" ng-click="move( -1 )"><span style="font-size: 12px;">&Lt;</span></button></div>' +
             '<div style="float:left;">' +
@@ -59,8 +64,10 @@ app.directive( 'gaDateRangePicker', [ function() {
             '<input type="text" class="form-control input-sm" focus-on="dateEnd" ng-focus="focusDate(\'end\' , $event )" ng-model="dates.endLabel" ng-blur="dateBlur( \'end\' , dates.endLabel )">' +
             '</form>' +
             '</div>' +
+            '<div class="gadpButtons">' +
             '<button class="btn btn-primary btn-xs" ng-click="valid()">Appliquer</button>&nbsp;' +
             '<button class="btn btn-default btn-xs"ng-click="switchDisplay( false )">Annuler</button>' +
+            '</div>' +
             '</div>' +
             '<div style="clear: both"></div>' +
             '</div>'
@@ -150,7 +157,7 @@ app.directive( 'gaDateRangePicker', [ function() {
             $scope.range1.startLabel = moment($scope.range1.start).format( 'll' );
             $scope.range1.endLabel = moment($scope.range1.end).format( 'll' );
             // Set Display
-            $scope.display = true;
+            $scope.display = false;
             if ( !$scope.nMonth ) { $scope.nMonth = 3 }
             /**
              * Gen Matrix
@@ -177,7 +184,7 @@ app.directive( 'gaDateRangePicker', [ function() {
                 var current = moment({y:year, M:month, d:1 });
                 var maxNumWeeks = 0;
                 for ( var i = 0;i<numMonth;i++ ) {
-                    var startMonth = angular.copy(current).subtract( i , 'month' );
+                    var startMonth = moment({y:year, M:month, d:1 }).subtract( i , 'month' );
                     var cMonth = {
                         name : startMonth.format( 'MMMM' ),
                         year : startMonth.format( 'YYYY' ),
@@ -186,7 +193,7 @@ app.directive( 'gaDateRangePicker', [ function() {
                         numWeeks : 0,
                         weeks : []
                     }
-                    var currentDate = angular.copy( startMonth );
+                    var currentDate = moment({y:year, M:month, d:1 }).subtract( i , 'month' );
                     var countWeeks = 0;
                     var numWeek = 0;
                     var id = 0;
@@ -307,7 +314,32 @@ app.directive( 'gaDateRangePicker', [ function() {
                     end: $scope.dates.end,
                     endLabel : moment( $scope.dates.end).format( 'll' )
                 };
+                if ( $scope.nChange ) { $scope.nChange( $scope.range1 ) }
                 $scope.display = false;
+            }
+            // Move period
+            $scope.movePeriod = function(sens) {
+                var start = moment($scope.dates.start);
+                var end = moment($scope.dates.end);
+                var duration = moment.duration(start.diff(end));
+                var delta = -duration.asDays() + 1;
+                if ( sens == -1 ) {
+                    start.subtract( delta , 'days' );
+                    end.subtract( delta , 'days' );
+                }
+                else {
+                    start.add( delta , 'days' );
+                    end.add( delta , 'days' );
+                }
+                $scope.dates = {
+                    start : start.format( 'YYYY-MM-DD' ),
+                    startLabel : start.format( 'll' ),
+                    end : end.format( 'YYYY-MM-DD' ),
+                    endLabel : end.format( 'll' ),
+                    select : 'start'
+                }
+                $scope.calend =  genMatrixMonth( now.month()  , now.year() , { dateStart : $scope.dates.start , dateEnd : $scope.dates.end } ) ;
+                $scope.valid();
             }
             // Put Focus On Date Start
             focus('dateStart');
