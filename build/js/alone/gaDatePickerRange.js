@@ -27,7 +27,8 @@ app.directive( 'gaDateRangePicker', [ function() {
         scope : {
             'range1' : '=',
             'nMonth' : '@',
-            'nChange': '='
+            'nChange': '=',
+            'labels' : '='
         },
         template:
             '<div class="btn-group" role="group">' +
@@ -51,7 +52,7 @@ app.directive( 'gaDateRangePicker', [ function() {
             '<div style="float:left"><button class="btn btn-default btn-xs" ng-click="move( 1 )"><span style="font-size: 12px;">&Gt;</span></button></div>' +
             '<div style="float:left;margin-left: 10px">' +
             '<div class="gadpText">' +
-                'Période : ' +
+                '{{labelsMap.period}} : ' +
                 '<select ng-model="currentPeriod" ng-change="changePeriod()">' +
                     '<option ng-repeat="(key,period) in spePeriods" value="{{key}}" ng-selected="key==currentPeriod">' +
                     '{{period.label}}' +
@@ -65,8 +66,8 @@ app.directive( 'gaDateRangePicker', [ function() {
             '</form>' +
             '</div>' +
             '<div class="gadpButtons">' +
-            '<button class="btn btn-primary btn-xs" ng-click="valid()">Appliquer</button>&nbsp;' +
-            '<button class="btn btn-default btn-xs"ng-click="switchDisplay( false )">Annuler</button>' +
+            '<button class="btn btn-primary btn-xs" ng-click="valid()">{{labelsMap.apply}}</button>&nbsp;' +
+            '<button class="btn btn-default btn-xs"ng-click="switchDisplay( false )">{{labelsMap.cancel}}</button>' +
             '</div>' +
             '</div>' +
             '<div style="clear: both"></div>' +
@@ -74,30 +75,44 @@ app.directive( 'gaDateRangePicker', [ function() {
         ,
         controller : [ '$scope' , 'focus' , '$element' , '$attrs' , '$transclude' , function( $scope , focus , $element , $attrs , $transclude ) {
             var now = moment().startOf( 'day' );
+            $scope.labelsMap = angular.extend({},{
+                custom : 'Personnalisée',
+                today: 'Aujourd\'hui',
+                yesterday: 'Hier',
+                thisWeek : 'Semaine courante',
+                lastWeek : 'Semaine dernière',
+                thisMonth : 'Mois courant',
+                lastMonth : 'Mois dernier',
+                last7Days : 'Les 7 derniers jours',
+                last30Days : 'Les 30 derniers jours',
+                apply : 'Appliquer',
+                period : 'Période',
+                cancel : 'Annuler'
+            },$scope.labels);
             $scope.spePeriods = {
-                1 : { label : "Personnalisée" },
+                1 : { label : $scope.labelsMap.custom },
                 2 : {
-                      label : "Aujourd'hui" ,
+                      label : $scope.labelsMap.today ,
                       calculate : function() {
                           updateDates(now.format('YYYY-MM-DD'), now.format('YYYY-MM-DD'));
                       }
                     },
                 3 : {
-                      label : "Hier",
+                      label : $scope.labelsMap.yesterday,
                       calculate : function() {
                           var yesturday = angular.copy( now ).subtract( 1 , 'day');
                           updateDates( yesturday.format( 'YYYY-MM-DD' ) , yesturday.format( 'YYYY-MM-DD' ) );
                       }
                     },
                 4 : {
-                    label : "Semaine courante",
+                    label : $scope.labelsMap.thisWeek,
                     calculate : function() {
                         var firstDayWeek = angular.copy( now ).startOf( 'week' );
                         updateDates( firstDayWeek.format( 'YYYY-MM-DD' ) , now.format( 'YYYY-MM-DD' ) );
                     }
                 } ,
                 5 : {
-                    label : "Semaine dernière",
+                    label : $scope.labelsMap.lastWeek,
                     calculate : function() {
                         var firstDayLastWeek = angular.copy( now ).subtract( 1 , 'week').startOf( 'week' );
                         var lastDayLastWeek = angular.copy( firstDayLastWeek).endOf( 'week' );
@@ -105,14 +120,14 @@ app.directive( 'gaDateRangePicker', [ function() {
                     }
                 },
                 6 : {
-                    label : "Mois courant",
+                    label : $scope.labelsMap.thisMonth,
                     calculate : function() {
                         var firstDayOfMonth = angular.copy( now ).startOf( 'month' );
                         updateDates( firstDayOfMonth.format( 'YYYY-MM-DD' ) , now.format( 'YYYY-MM-DD' ) );
                     }
                 } ,
                 7 : {
-                    label : "Mois dernier",
+                    label : $scope.labelsMap.lastMonth,
                     calculate : function() {
                         var firstDayLastMonth = angular.copy( now ).subtract( 1 , 'month').startOf( 'month' );
                         var lastDayLastWeek = angular.copy( firstDayLastMonth ).endOf( 'month' );
@@ -120,14 +135,14 @@ app.directive( 'gaDateRangePicker', [ function() {
                     }
                 },
                 8 : {
-                    label : "Les 7 derniers jours",
+                    label : $scope.labelsMap.last7Days,
                     calculate : function() {
                         var dateStart = angular.copy( now ).subtract( 6 , 'day');
                         updateDates( dateStart.format( 'YYYY-MM-DD' ) , now.format( 'YYYY-MM-DD' ) );
                     }
                 },
                 9 : {
-                    label : "Les 30 derniers jours",
+                    label : $scope.labelsMap.last30Days,
                     calculate : function() {
                         var dateStart = angular.copy( now ).subtract( 29 , 'day');
                         updateDates( dateStart.format( 'YYYY-MM-DD' ) , now.format( 'YYYY-MM-DD' ) );
