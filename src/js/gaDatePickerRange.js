@@ -28,50 +28,44 @@ app.directive( 'gaDateRangePicker', [ function() {
             'range1' : '=',
             'nMonth' : '@',
             'nChange': '=',
+            'display': '=nDisplay',
             'labels' : '='
         },
         template:
-            '<div class="btn-group" role="group">' +
-            '<button type="button" class="btn btn-default" role="group" ng-click="movePeriod(-1)"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span></button>' +
-            '<button type="button" class="btn btn-default" role="group" ng-click="switchDisplay( true )">{{range1.startLabel}} - {{range1.endLabel}}</button>' +
-            '<button type="button" class="btn btn-default" role="group" ng-click="movePeriod(1)"><span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span></button>' +
-            '</div>' +
-            '<div class="gadpBox" ng-show="display">' +
-            '<div style="float:left"><button class="btn btn-default btn-xs" ng-click="move( -1 )"><span style="font-size: 12px;">&Lt;</span></button></div>' +
-            '<div style="float:left;">' +
-            '<table class="gadpTable" cellpadding="0" cellspacing="0">' +
-            '<thead><tr><td class="gadpHeadTd" colspan="7" ng-repeat="month in calend.months track by $index">{{month.name}} {{month.year}}</td></tr></thead>' +
-            '<tbody>' +
-            '<tr><td class="gadpWeekDay" ng-repeat="weekDay in calend.weekDays track by $index">{{weekDay.substr(0,1).toUpperCase()}}</td></tr>' +
-            '<tr ng-repeat="week in calend.weekGroups track by $index">' +
-            '<td class="gadpCell" ng-class="\'gadpCell\' + day.type" ng-click="setDate( day.date )" ng-repeat="day in week track by $index">{{day.numDay}}</td>' +
-            '</tr>' +
-            '</tbody>' +
-            '</table>' +
-            '</div>' +
-            '<div style="float:left"><button class="btn btn-default btn-xs" ng-click="move( 1 )"><span style="font-size: 12px;">&Gt;</span></button></div>' +
-            '<div style="float:left;margin-left: 10px">' +
-            '<div class="gadpText">' +
-                '{{labelsMap.period}} : ' +
-                '<select ng-model="currentPeriod" ng-change="changePeriod()">' +
-                    '<option ng-repeat="(key,period) in spePeriods" value="{{key}}" ng-selected="key==currentPeriod">' +
-                    '{{period.label}}' +
-                    '</option>' +
-                '</select>' +
-            '</div>' +
-            '<div class="gadpDatesInputs">' +
-            '<form role="form" class="form-inline">'+
-            '<input type="text" class="form-control input-sm" focus-on="dateStart" ng-focus="focusDate(\'start\' , $event )" ng-model="dates.startLabel" ng-blur="dateBlur( \'start\' , dates.startLabel )">-' +
-            '<input type="text" class="form-control input-sm" focus-on="dateEnd" ng-focus="focusDate(\'end\' , $event )" ng-model="dates.endLabel" ng-blur="dateBlur( \'end\' , dates.endLabel )">' +
-            '</form>' +
-            '</div>' +
-            '<div class="gadpButtons">' +
-            '<button class="btn btn-primary btn-xs" ng-click="valid()">{{labelsMap.apply}}</button>&nbsp;' +
-            '<button class="btn btn-default btn-xs"ng-click="switchDisplay( false )">{{labelsMap.cancel}}</button>' +
-            '</div>' +
-            '</div>' +
-            '<div style="clear: both"></div>' +
-            '</div>'
+        '<div class="btn-group" data-ng-click="noop($event)" role="group" >' +
+        '<span role="group" ng-click="switchDisplay( true )">{{range1.startLabel}} - {{range1.endLabel}}</button>' +
+        '</div>' +
+        '<div class="gadpBox" data-ng-click="noop($event)" ng-style="{display:display?\'block\':\'none\'}">' +
+        '<div style="float:left"><button class="btn btn-default btn-xs" ng-click="move( -1 )"><span class="ai ai-keyboard-arrow-left"></span></button></div>' +
+        '<div style="float:left;">' +
+        '<table class="gadpTable" cellpadding="0" cellspacing="0">' +
+        '<thead><tr><td class="gadpHeadTd" colspan="7" ng-repeat="month in calend.months track by $index">{{month.name}} {{month.year}}</td></tr></thead>' +
+        '<tbody>' +
+        '<tr><td class="gadpWeekDay" ng-repeat="weekDay in calend.weekDays track by $index">{{weekDay.substr(0,1).toUpperCase()}}</td></tr>' +
+        '<tr ng-repeat="week in calend.weekGroups track by $index">' +
+        '<td class="gadpCell" ng-class="\'gadpCell\' + day.type" ng-click="setDate( day.date )" ng-repeat="day in week track by $index">{{day.numDay}}</td>' +
+        '</tr>' +
+        '</tbody>' +
+        '</table>' +
+        '</div>' +
+        '<div style="float:left"><button class="btn btn-default btn-xs" ng-click="move( 1 )"><span  class="ai ai-keyboard-arrow-right"></span></button></div>' +
+        '<div style="">' +
+        '<div class="gadpText">' +
+        '<select class="form-control" style="height:34px;" ng-model="currentPeriod" ng-change="changePeriod()">' +
+        '<option ng-repeat="(key,period) in spePeriods" value="{{key}}" ng-selected="key==currentPeriod">' +
+        '{{period.label}}' +
+        '</option>' +
+        '</select>' +
+        '</div>' +
+        '<div class="gadpDatesInputs clearfix">' +
+        '<form role="form" class="form-inline">'+
+        '<input type="text" class="form-control pull-left" focus-on="dateStart" ng-focus="focusDate(\'start\' , $event )" ng-model="dates.startLabel" ng-blur="dateBlur( \'start\' , dates.startLabel )">' +
+        '<div class="ai ai-arrow-forward fs-18 mt-5"></div><input type="text" class="form-control pull-right" focus-on="dateEnd" ng-focus="focusDate(\'end\' , $event )" ng-model="dates.endLabel" ng-blur="dateBlur( \'end\' , dates.endLabel )">' +
+        '</form>' +
+        '</div>' +
+        '</div>' +
+        '<div style="clear: both"></div>' +
+        '</div>'
         ,
         controller : [ '$scope' , 'focus' , '$element' , '$attrs' , '$transclude' , function( $scope , focus , $element , $attrs , $transclude ) {
             var now = moment().startOf( 'day' );
@@ -89,29 +83,33 @@ app.directive( 'gaDateRangePicker', [ function() {
                 period : 'Période',
                 cancel : 'Annuler'
             },$scope.labels);
-            $scope.spePeriods = {
-                1 : { label : $scope.labelsMap.custom },
-                2 : {
-                      label : $scope.labelsMap.today ,
-                      calculate : function() {
-                          updateDates(now.format('YYYY-MM-DD'), now.format('YYYY-MM-DD'));
-                      }
-                    },
-                3 : {
-                      label : $scope.labelsMap.yesterday,
-                      calculate : function() {
-                          var yesturday = angular.copy( now ).subtract( 1 , 'day');
-                          updateDates( yesturday.format( 'YYYY-MM-DD' ) , yesturday.format( 'YYYY-MM-DD' ) );
-                      }
-                    },
-                4 : {
+            $scope.spePeriods = [
+                { id: 1,label : $scope.labelsMap.custom },
+                {
+                    id: 2,
+                    label : $scope.labelsMap.today ,
+                    calculate : function() {
+                        updateDates(now.format('YYYY-MM-DD'), now.format('YYYY-MM-DD'));
+                    }
+                },
+                {
+                    id: 3,
+                    label : $scope.labelsMap.yesterday,
+                    calculate : function() {
+                        var yesturday = angular.copy( now ).subtract( 1 , 'day');
+                        updateDates( yesturday.format( 'YYYY-MM-DD' ) , yesturday.format( 'YYYY-MM-DD' ) );
+                    }
+                },
+                {
+                    id: 4,
                     label : $scope.labelsMap.thisWeek,
                     calculate : function() {
                         var firstDayWeek = angular.copy( now ).startOf( 'week' );
                         updateDates( firstDayWeek.format( 'YYYY-MM-DD' ) , now.format( 'YYYY-MM-DD' ) );
                     }
                 } ,
-                5 : {
+                {
+                    id: 5,
                     label : $scope.labelsMap.lastWeek,
                     calculate : function() {
                         var firstDayLastWeek = angular.copy( now ).subtract( 1 , 'week').startOf( 'week' );
@@ -119,14 +117,16 @@ app.directive( 'gaDateRangePicker', [ function() {
                         updateDates( firstDayLastWeek.format( 'YYYY-MM-DD' ) , lastDayLastWeek.format( 'YYYY-MM-DD' ) );
                     }
                 },
-                6 : {
+                {
+                    id: 6,
                     label : $scope.labelsMap.thisMonth,
                     calculate : function() {
                         var firstDayOfMonth = angular.copy( now ).startOf( 'month' );
                         updateDates( firstDayOfMonth.format( 'YYYY-MM-DD' ) , now.format( 'YYYY-MM-DD' ) );
                     }
                 } ,
-                7 : {
+                {
+                    id: 7,
                     label : $scope.labelsMap.lastMonth,
                     calculate : function() {
                         var firstDayLastMonth = angular.copy( now ).subtract( 1 , 'month').startOf( 'month' );
@@ -134,27 +134,34 @@ app.directive( 'gaDateRangePicker', [ function() {
                         updateDates( firstDayLastMonth.format( 'YYYY-MM-DD' ) , lastDayLastWeek.format( 'YYYY-MM-DD' ) );
                     }
                 },
-                8 : {
+                {
+                    id: 8,
                     label : $scope.labelsMap.last7Days,
                     calculate : function() {
                         var dateStart = angular.copy( now ).subtract( 6 , 'day');
                         updateDates( dateStart.format( 'YYYY-MM-DD' ) , now.format( 'YYYY-MM-DD' ) );
                     }
                 },
-                9 : {
+                {
+                    id: 9,
                     label : $scope.labelsMap.last30Days,
                     calculate : function() {
                         var dateStart = angular.copy( now ).subtract( 29 , 'day');
                         updateDates( dateStart.format( 'YYYY-MM-DD' ) , now.format( 'YYYY-MM-DD' ) );
                     }
                 }
-            }
+            ];
+
             $scope.currentPeriod = 1;
-            $scope.changePeriod = function() {
-                if ( $scope.spePeriods[ $scope.currentPeriod ].calculate ) {
-                    $scope.spePeriods[ $scope.currentPeriod ].calculate();
+            $scope.$watch('currentPeriod', function (newval,oldval) {
+                if(newval){
+                    if ( $scope.spePeriods[ $scope.currentPeriod ].calculate ) {
+                        $scope.spePeriods[ $scope.currentPeriod ].calculate();
+                        focus( 'dateStart' );
+                    }
                 }
-            }
+            });
+
             var updateDates = function( dateStart , dateEnd ) {
                 $scope.dates = {
                     start : dateStart,
@@ -165,6 +172,10 @@ app.directive( 'gaDateRangePicker', [ function() {
                 }
                 $scope.calend =  genMatrixMonth( current.month()  , current.year() , { dateStart : $scope.dates.start , dateEnd : $scope.dates.end } ) ;
             }
+            $scope.noop = function (ev) {
+                //ev.preventDefault();
+                ev.stopPropagation();
+            }
             // Range1 par default
             if ( !$scope.range1.start ) { $scope.range1.start = now.format( 'YYYY-MM-DD' ); }
             if ( !$scope.range1.end ) { $scope.range1.end = now.format( 'YYYY-MM-DD' ); }
@@ -173,6 +184,11 @@ app.directive( 'gaDateRangePicker', [ function() {
             $scope.range1.endLabel = moment($scope.range1.end).format( 'll' );
             // Set Display
             $scope.display = false;
+
+            $scope.focus = function () {
+                $scope.display = true;
+            }
+
             if ( !$scope.nMonth ) { $scope.nMonth = 3 }
             /**
              * Gen Matrix
@@ -279,7 +295,6 @@ app.directive( 'gaDateRangePicker', [ function() {
             $scope.focusDate = function( type ) {
                 $scope.dates[ type + 'Label' ] = moment(  $scope.dates[ type ] ).format( 'DD/MM/YYYY' );
                 $scope.dates.select = type;
-                $scope.currentPeriod = 1;
             }
             // Set Date Range
             $scope.setDate = function( date ) {
@@ -322,14 +337,16 @@ app.directive( 'gaDateRangePicker', [ function() {
                 select : 'start'
             }
             // Valid
-            $scope.valid = function() {
-                $scope.range1 = {
-                    start: $scope.dates.start,
-                    startLabel : moment( $scope.dates.start).format( 'll' ),
-                    end: $scope.dates.end,
-                    endLabel : moment( $scope.dates.end).format( 'll' )
-                };
-                if ( $scope.nChange ) { $scope.nChange( $scope.range1 ) }
+            $scope.close = function() {
+                if($scope.display){
+                    $scope.range1 = {
+                        start: $scope.dates.start,
+                        startLabel : moment( $scope.dates.start).format( 'll' ),
+                        end: $scope.dates.end,
+                        endLabel : moment( $scope.dates.end).format( 'll' )
+                    };
+                    if ( $scope.nChange ) { $scope.nChange( $scope.range1 ) }
+                }
                 $scope.display = false;
             }
             // Move period
@@ -358,9 +375,15 @@ app.directive( 'gaDateRangePicker', [ function() {
             }
             // Put Focus On Date Start
             focus('dateStart');
+
             // Display Calendar
             var current = moment($scope.dates.end);
             $scope.calend =  genMatrixMonth( now.month()  , now.year() , { dateStart : $scope.dates.start , dateEnd : $scope.dates.end } ) ;
+
+            $scope.$on('closeDD', function (event) {
+                console.log('CLOSE ALL event', event);
+                $scope.close();
+            });
         } ]
     };
 } ] );
