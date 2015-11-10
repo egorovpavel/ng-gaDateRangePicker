@@ -33,7 +33,7 @@ app.directive( 'gaDateRangePicker', [ function() {
         },
         template:
         '<div class="btn-group" data-ng-click="noop($event)" role="group" >' +
-        '<span role="group" ng-click="switchDisplay( true )">{{range1.startLabel}} - {{range1.endLabel}}</button>' +
+        '<span role="group" ng-click="open()">{{range1.startLabel}} - {{range1.endLabel}}</button>' +
         '</div>' +
         '<div class="gadpBox" data-ng-click="noop($event)" ng-style="{display:display?\'block\':\'none\'}">' +
         '<div style="float:left"><button class="btn btn-default btn-xs" ng-click="move( -1 )"><span class="ai ai-keyboard-arrow-left"></span></button></div>' +
@@ -65,6 +65,7 @@ app.directive( 'gaDateRangePicker', [ function() {
         '</div>' +
         '</div>' +
         '<div style="clear: both"></div>' +
+        '<button class="btn btn-primary btn-block" ng-click="applyClose()">{{labelsMap.apply}}</button>' +
         '</div>'
         ,
         controller : [ '$scope' , 'focus' , '$element' , '$attrs' , '$transclude' , function( $scope , focus , $element , $attrs , $transclude ) {
@@ -96,8 +97,8 @@ app.directive( 'gaDateRangePicker', [ function() {
                     id: 3,
                     label : $scope.labelsMap.yesterday,
                     calculate : function() {
-                        var yesturday = angular.copy( now ).subtract( 1 , 'day');
-                        updateDates( yesturday.format( 'YYYY-MM-DD' ) , yesturday.format( 'YYYY-MM-DD' ) );
+                        var yesterday = angular.copy( now ).subtract( 1 , 'day');
+                        updateDates( yesterday.format( 'YYYY-MM-DD' ) , yesterday.format( 'YYYY-MM-DD' ) );
                     }
                 },
                 {
@@ -173,7 +174,6 @@ app.directive( 'gaDateRangePicker', [ function() {
                 $scope.calend =  genMatrixMonth( current.month()  , current.year() , { dateStart : $scope.dates.start , dateEnd : $scope.dates.end } ) ;
             }
             $scope.noop = function (ev) {
-                //ev.preventDefault();
                 ev.stopPropagation();
             }
             // Range1 par default
@@ -182,14 +182,12 @@ app.directive( 'gaDateRangePicker', [ function() {
             // Range1 Format Label
             $scope.range1.startLabel = moment($scope.range1.start).format( 'll' );
             $scope.range1.endLabel = moment($scope.range1.end).format( 'll' );
+
             // Set Display
             $scope.display = false;
 
-            $scope.focus = function () {
-                $scope.display = true;
-            }
-
             if ( !$scope.nMonth ) { $scope.nMonth = 3 }
+
             /**
              * Gen Matrix
              */
@@ -280,9 +278,7 @@ app.directive( 'gaDateRangePicker', [ function() {
                 matrix.weekGroups = weeksGroup;
                 return matrix;
             }
-            // Display
-            $scope.switchDisplay = function( show ) {
-                $scope.display = show; }
+
             /**
              * Move Month in Calendar
              */
@@ -336,8 +332,12 @@ app.directive( 'gaDateRangePicker', [ function() {
                 endLabel : moment( $scope.range1.end ).format( 'll' ),
                 select : 'start'
             }
-            // Valid
-            $scope.close = function() {
+            $scope.applyClose = function(){
+                $scope.apply();
+                $scope.close();
+            }
+            // Apply
+            $scope.apply = function() {
                 if($scope.display){
                     $scope.range1 = {
                         start: $scope.dates.start,
@@ -347,8 +347,20 @@ app.directive( 'gaDateRangePicker', [ function() {
                     };
                     if ( $scope.nChange ) { $scope.nChange( $scope.range1 ) }
                 }
+            }
+            // Close
+            $scope.close = function() {
                 $scope.display = false;
             }
+            // Open
+            $scope.open = function() {
+                $scope.display = true;
+                // Update dates according to "applied" dates.
+                updateDates( $scope.range1.start , $scope.range1.end );
+                // Reset date select pointer.
+                $scope.dates.select = 'start';
+            }
+
             // Move period
             $scope.movePeriod = function(sens) {
                 var start = moment($scope.dates.start);
@@ -381,7 +393,6 @@ app.directive( 'gaDateRangePicker', [ function() {
             $scope.calend =  genMatrixMonth( now.month()  , now.year() , { dateStart : $scope.dates.start , dateEnd : $scope.dates.end } ) ;
 
             $scope.$on('closeDD', function (event) {
-                console.log('CLOSE ALL event', event);
                 $scope.close();
             });
         } ]
